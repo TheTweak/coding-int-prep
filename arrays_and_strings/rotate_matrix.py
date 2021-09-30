@@ -12,23 +12,19 @@ def rotate90(image: list) -> list:
     return result
 
 
-def rotateN(s: int, n: int, i: int, arr: list) -> None:
-    if s >= n:
-        return
-    a = arr[s+i][n]
-    arr[s+i][n] = arr[s][s+i]
-    b = arr[n][n-i]
-    arr[n][n-i] = a
-    c = arr[n-i][s]
-    arr[n-i][s] = b
-    arr[s][s+i] = c
-
-
 def rotate90_inplace(image: list) -> None:
     n = len(image)
-    for i in range(n):
-        for j in range(n-1):
-            rotateN(i, n-i-1, j, image)
+    for i in range(n//2):
+        for j in range(i, n-i-1):
+            top = image[i][j]
+            # left -> top
+            image[i][j] = image[n-j-1][i]
+            # bottom -> left
+            image[n-j-1][i] = image[n-i-1][n-j-1]
+            # right -> bottom
+            image[n-i-1][n-j-1] = image[j][n-i-1]
+            # top -> right
+            image[j][n-i-1] = top
 
 
 def print_image(image: list) -> None:
