@@ -7,6 +7,7 @@ for each r, c in m, if m[r][c] == 0
 m[r][:] = 0
 m[:][c] = 0
 O(n) = m*n(m+n) + m*n
+O(mn) space
 '''
 def zero_matrix(m: list) -> None:
     zero_ind = set()
