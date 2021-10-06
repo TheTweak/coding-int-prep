@@ -49,8 +49,33 @@ brute force:
 
     time: O(n)=len_longest
     space: O(n)=len_longest for the resulting linked list
+
+    if digits are stored in forward order:
+
+    - reverse the lists first
+    - reverse the result
+
+    improvement: use one of the linked lists to store the result
+
 '''
+
+
+def reverse(l: LinkedList) -> None:
+    assert l.head
+    prev = None
+    nxt = None
+    n = l.head
+    while n:
+        nxt = n.next
+        n.next = prev
+        prev = n
+        n = nxt
+    l.head = prev
+
+
 def sum_lists(a: LinkedList, b: LinkedList) -> LinkedList:
+    reverse(a)
+    reverse(b)
     result = LinkedList()
     overflow = False
     n = a.head
@@ -75,6 +100,7 @@ def sum_lists(a: LinkedList, b: LinkedList) -> LinkedList:
     if overflow:
         result.add(1)
 
+    reverse(result)
     return result
 
 
@@ -82,10 +108,17 @@ if __name__ == '__main__':
     a = LinkedList()
     a.add(9)
     a.add(9)
-    a.add(9)
+    a.add(3)
+    '''
+    reverse(a)
+    n = a.head
+    while n:
+        print(n.value)
+        n = n.next
+    '''
 
     b = LinkedList()
-    b.add(1)
+    b.add(7)
 
     s = sum_lists(a, b)
 
