@@ -63,13 +63,29 @@ if list is doubly linked, then it is possible to go from both ends
 and compare elements until pointers meet in the middle.
 '''
 def is_palindrome(ll: LinkedList) -> bool:
-    mid = ll.size // 2
-    is_odd = ll.size % 2 != 0
+    slow = ll.head
+    fast = ll.head
 
-    mid_node = ll.head
-    for _ in range(mid):
-        mid_node = mid_node.next
-    if is_odd:
+    '''
+    1->2->3->4->5
+
+    1 1
+
+    2 3
+    3 5
+
+    1->2->3->4
+    1 1
+
+    2 3
+    3 4
+    '''
+    while slow and fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+
+    mid_node = slow
+    if fast:
         mid_node = mid_node.next
 
     half = LinkedList()
