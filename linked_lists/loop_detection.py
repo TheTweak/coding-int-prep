@@ -64,6 +64,27 @@ def check_loop_size(ll: LinkedList) -> Node:
         i -= 1
     return None
 
+def check_loop_2_pointers(ll: LinkedList) -> Node:
+    fast = ll.head
+    slow = ll.head
+
+    while slow and fast and fast.next:
+        slow = slow.next
+        fast = fast.next.next
+        if slow == fast:
+            print('collision')
+            break
+
+    if not fast:
+        return None
+
+    slow = ll.head
+    while slow != fast:
+        slow = slow.next
+        fast = fast.next
+
+    return slow.next
+
 
 if __name__ == '__main__':
     ll = LinkedList()
@@ -73,7 +94,7 @@ if __name__ == '__main__':
     d = ll.add('d')
     d.next = c
 
-    loop = check_loop_size(ll)
+    loop = check_loop_2_pointers(ll)
     if loop:
         print(f'loop detected: {loop.value}')
 
