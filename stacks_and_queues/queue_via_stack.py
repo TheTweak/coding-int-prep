@@ -3,6 +3,10 @@ Implement a queue using two stacks.
 
 push: O(N)=N time and space
 pop: O(N)=1
+
+
+Improvement:
+    use lazy push: do not move elements around until pop is performed.
 '''
 
 class Stack:
@@ -23,18 +27,17 @@ class Stack:
 
 class Queue:
     def __init__(self):
-        self.stack_a = Stack()
-        self.stack_b = Stack()
+        self.stack_newest = Stack()
+        self.stack_oldest = Stack()
 
     def push(self, x: int) -> None:
-        while not self.stack_b.is_empty():
-            self.stack_a.push(self.stack_b.pop())
-        self.stack_b.push(x)
-        while not self.stack_a.is_empty():
-            self.stack_b.push(self.stack_a.pop())
+        self.stack_newest.push(x)
 
     def pop(self) -> int:
-        return self.stack_b.pop()
+        if self.stack_oldest.is_empty():
+            while not self.stack_newest.is_empty():
+                self.stack_oldest.push(self.stack_newest.pop())
+        return self.stack_oldest.pop()
 
 
 if __name__ == '__main__':
