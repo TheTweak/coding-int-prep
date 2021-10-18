@@ -27,14 +27,8 @@ Solution:
 
     dequeue_cat/dog in O(1)?
 
-    maintain separate queues for cats and dogs. maintain the oldest animal
-    separately.
-
-    set oldest animal on first enqueue;
-    on dequeue_any:
-        
-
-
+    maintain separate queues for cats and dogs.
+    to find the absolute oldest animal, use timestamp/shared incremental ID on each animal
 '''
 from enum import Enum
 from datetime import datetime
