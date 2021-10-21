@@ -13,6 +13,7 @@ O(N)=log(N) time and memory
 '''
 
 import math
+from collections import deque
 
 class Node:
     def __init__(self, value: int):
@@ -21,12 +22,23 @@ class Node:
         self.right = None
 
 
-def print_tree(root: Node, output: dict, level: int) -> None:
-    if not root:
-        return
-    output.setdefault(level, []).append(root.value)
-    print_tree(root.left, output, level + 1)
-    print_tree(root.right, output, level + 1)
+def print_tree(root: Node, n: int) -> None:
+    queue = deque()
+    queue.append((0, root))
+    prev_level = 0
+    tree_width = int(math.pow(2, math.ceil(math.log2(n))-1)/2)
+    while len(queue):
+        level, node = queue.popleft()
+        if not node:
+            continue
+        if level != prev_level:
+            tree_width = int(tree_width/2)
+            print()
+        print(' '*tree_width, end='')
+        print(str(node.value), end='')
+        queue.append((level+1, node.left))
+        queue.append((level+1, node.right))
+        prev_level = level
 
 
 '''
@@ -57,13 +69,6 @@ def create_bs_tree(array: list) -> Node:
 
 
 if __name__ == '__main__':
-    array = list(range(16))
+    array = list(range(3))
     tree = create_bs_tree(array)
-    tree_str = {}
-    print_tree(tree, tree_str, 0)
-    print(tree_str)
-    identation = int(math.log2(len(array))+1)*8
-    for level, nodes in tree_str.items():
-        identation = identation//2
-        ident_spaces = ' '*identation
-        print(ident_spaces + ident_spaces.join([str(x) for x in nodes]))
+    print_tree(tree, len(array))
