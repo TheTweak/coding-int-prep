@@ -54,10 +54,24 @@ def create_list_of_depths(btree, n: int) -> list:
     return result
 
 
+def create_list_of_depths_2_(btree, result: list, level: int) -> None:
+    if not btree:
+        return
+    result[level].add(btree.value)
+    create_list_of_depths_2_(btree.left, result, level+1)
+    create_list_of_depths_2_(btree.right, result, level+1)
+
+
+def create_list_of_depths_2(btree, n: int) -> list:
+    result = [LinkedList() for _ in range(math.ceil(math.log2(n))+1)]
+    create_list_of_depths_2_(btree, result, 0)
+    return result
+
+
 if __name__ == '__main__':
     n = 31
     btree = create_bs_tree(list(range(n)))
-    lists = create_list_of_depths(btree, n)
+    lists = create_list_of_depths_2(btree, n)
     for ll in lists:
         n = ll.head
         while n:
