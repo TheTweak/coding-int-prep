@@ -11,6 +11,10 @@ Brute force:
 - calculate sum
 - when sum is found, increment result by 1 and start again from root's child nodes
 - O(N^2) in both time and space
+
+Improvement:
+
+
 '''
 
 from collections import deque
@@ -52,10 +56,10 @@ class BruteForceSolution:
 
 if __name__ == '__main__':
     '''
-            1
-        2       3
-      1   2   5   0
-    1            1
+            1 (1)
+        2 (2, 3) 3 (3, 4)
+      1(1, 3, 4)   2   5   0 (0, 3, 4)
+    1 (1, 2, 4, 5)           1 (1, 4, 5)
     '''
     root = Node(1)
     root.left = Node(2)
@@ -67,6 +71,6 @@ if __name__ == '__main__':
     root.right.right = Node(0)
     root.right.right.left = Node(1)
 
-    print(BruteForceSolution(root, 5).solve())
-    print(BruteForceSolution(root, 10).solve())
-    print(BruteForceSolution(root, 9).solve())
+    assert BruteForceSolution(root, 5).solve() == 4
+    assert BruteForceSolution(root, 10).solve() == 0
+    assert BruteForceSolution(root, 9).solve() == 1
