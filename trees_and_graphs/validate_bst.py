@@ -32,6 +32,32 @@ def traverse_in_order(root: Node, nodes: list) -> None:
     traverse_in_order(root.right, nodes)
 
 
+class NoExtraSpaceSolution:
+    def __init__(self, root: Node):
+        self.root = root
+        self.last = None
+
+    def traverse_and_compare(self, root: Node) -> bool:
+        if not root:
+            return True
+
+        if not self.traverse_and_compare(root.left):
+            return False
+
+        if self.last and root.value <= self.last.value:
+            return False
+
+        self.last = root
+
+        if not self.traverse_and_compare(root.right):
+            return False
+
+        return True
+
+    def solve(self) -> bool:
+        return self.traverse_and_compare(self.root)
+
+
 def is_bst(root: Node) -> bool:
     nodes = []
     traverse_in_order(root, nodes)
@@ -47,9 +73,11 @@ def is_bst(root: Node) -> bool:
 if __name__ == '__main__':
     bs_tree = create_bs_tree(list(range(16)))
     assert is_bst(bs_tree)
+    assert NoExtraSpaceSolution(bs_tree).solve()
     root = Node(1)
     root.left = Node(5)
     root.right = Node(6)
     root.left.left = Node(-1)
     root.right.right = Node(2)
     assert not is_bst(root)
+    assert not NoExtraSpaceSolution(root).solve()
