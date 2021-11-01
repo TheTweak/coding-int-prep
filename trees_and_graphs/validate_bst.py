@@ -58,6 +58,29 @@ class NoExtraSpaceSolution:
         return self.traverse_and_compare(self.root)
 
 
+class MinMaxSolution:
+    def __init__(self, root: Node):
+        self.root = root
+
+    def __solve(self, node: Node, min: int, max: int) -> bool:
+        if min is not None and node.value <= min:
+            return False
+
+        if max is not None and node.value > max:
+            return False
+
+        if node.left and not self.__solve(node.left, min, node.value):
+            return False
+
+        if node.right and not self.__solve(node.right, node.value, max):
+            return False
+
+        return True
+
+    def solve(self) -> bool:
+        return self.__solve(self.root, None, None)
+
+
 def is_bst(root: Node) -> bool:
     nodes = []
     traverse_in_order(root, nodes)
@@ -74,6 +97,7 @@ if __name__ == '__main__':
     bs_tree = create_bs_tree(list(range(16)))
     assert is_bst(bs_tree)
     assert NoExtraSpaceSolution(bs_tree).solve()
+    assert MinMaxSolution(bs_tree).solve()
     root = Node(1)
     root.left = Node(5)
     root.right = Node(6)
@@ -81,3 +105,4 @@ if __name__ == '__main__':
     root.right.right = Node(2)
     assert not is_bst(root)
     assert not NoExtraSpaceSolution(root).solve()
+    assert not MinMaxSolution(root).solve()
