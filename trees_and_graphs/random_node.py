@@ -10,7 +10,7 @@ Solution:
 
 1) store BST in a flat array; use uniform_random(0, len(arr)) to return random node
 2) if BST is represented as nodes, assign 2d coordinates (left hops, right hops) to each node (root is (0, 0))
-then pick uniform_random(0,
+then pick uniform_random(0, tree_height). But it requires tree to be balanced.
 '''
 
 from random import randint
