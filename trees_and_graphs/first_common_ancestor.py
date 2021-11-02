@@ -7,7 +7,7 @@ Solution:
             a
         b       c
     d      e   f  g
-  h      i    j     k
+  h  x    i    j     k
     l   n
 
 fca(l, i)=b
@@ -75,6 +75,7 @@ if __name__ == '__main__':
     root.right = Node('c')
     c = root.right
     b.left = Node('d')
+    b.left.right = Node('x')
     b.right = Node('e')
     c.left = Node('f')
     c.right = Node('g')
@@ -96,3 +97,6 @@ if __name__ == '__main__':
 
     _, fca_3 = fca(root, c.left, c.right)
     assert fca_3.name == 'c'
+
+    _, fca_x = fca(root, d.left.right, b.left.right)
+    assert fca_x.name == 'd'
