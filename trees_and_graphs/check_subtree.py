@@ -101,9 +101,10 @@ class IterativeSolution:
 
     def flatten_tree(self, root: Node, result: list) -> None:
         if not root:
+            result.append(None)
             return
-        self.flatten_tree(root.left, result)
         result.append(root.value)
+        self.flatten_tree(root.left, result)
         self.flatten_tree(root.right, result)
 
     def solve(self) -> bool:
