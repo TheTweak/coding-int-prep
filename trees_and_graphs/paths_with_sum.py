@@ -54,6 +54,44 @@ class BruteForceSolution:
         return self.__solve(self.root)
 
 
+'''
+Keep the running sum as we process the nodes.
+Start with root node, traverse its child nodes,
+calculate the sum.
+
+        1 (1)
+    2 (3)   3
+  1(4)   2  -2   2
+1(5)          -1
+'''
+class RunningSumSolution:
+    def __init__(self, root: Node, target: int):
+        self.root = root
+        self.target = target
+        self.running_sum_dict = {}
+
+    def __solve(self, node: Node, running_sum: int) -> int:
+        if not node:
+            return 0
+
+        running_sum += node.value
+        paths = self.running_sum_dict.get(running_sum-self.target, 0)
+        if running_sum == self.target:
+            paths += 1
+        if running_sum in self.running_sum_dict:
+            self.running_sum_dict[running_sum] += 1
+        else:
+            self.running_sum_dict[running_sum] = 1
+
+        paths += self.__solve(node.left, running_sum)
+        paths += self.__solve(node.right, running_sum)
+
+        self.running_sum_dict[running_sum] = max(0, self.running_sum_dict[running_sum]-1)
+        return paths
+
+    def solve(self) -> int:
+        return self.__solve(self.root, 0)
+
 if __name__ == '__main__':
     '''
             1 (1)
@@ -74,3 +112,7 @@ if __name__ == '__main__':
     assert BruteForceSolution(root, 5).solve() == 4
     assert BruteForceSolution(root, 10).solve() == 0
     assert BruteForceSolution(root, 9).solve() == 1
+
+    assert RunningSumSolution(root, 5).solve() == 4
+    assert RunningSumSolution(root, 10).solve() == 0
+    assert RunningSumSolution(root, 9).solve() == 1
