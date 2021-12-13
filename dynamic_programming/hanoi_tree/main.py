@@ -119,23 +119,8 @@ class Solution:
         self.ht.move(src, dst)
         self.__move(n-1, tmp, dst, src)
         
-
     def solve(self) -> None:
         self.__move(self.ht.n, 0, 2, 1)
-
-        #self.__move(3, 0, 2, 1)
-    
-        #self.__move(2, 0, 2, 1)
-
-
-        #self.__move(2, 0, 1, 2)
-            # self.__move(1, 0, 2, 1)
-            # self.__move(1, 0, 1, 2)
-            # self.__move(1, 2, 1, 0)
-
-        
-        #self.__move(1, 0, 2, 1)
-        #self.__move(2, 1, 2, 0)
 
     
 if __name__ == "__main__":
