@@ -1,11 +1,15 @@
 import sys
 import threading
+from time import sleep
+from collections import deque
+
 import dearpygui.dearpygui as dpg
 
 WIDTH = 800
 HEIGHT = 600
 DISC_H = 10
 DISC_W = 10
+DELAY_BETWEEN_FRAMES_SEC = 0.2
 
 
 class Tower:
@@ -49,6 +53,7 @@ class HanoiTowers:
 
         self.max_disc_w = n*DISC_W
         self.n = n
+        self.move_queue = deque()
 
         self.discs = [[], [], []]
         for i in range(self.n):
@@ -63,12 +68,16 @@ class HanoiTowers:
         while dpg.is_dearpygui_running():
             with dpg.window(label="Hanoi Towers", width=WIDTH, height=HEIGHT):
                 self.__draw_towers()
-                self.__draw_discs()            
+                self.__draw_discs()
+            if len(self.move_queue):
+                a, b = self.move_queue.popleft()
+                self.__move(a, b)
             dpg.render_dearpygui_frame()
+            sleep(DELAY_BETWEEN_FRAMES_SEC)      
 
         dpg.destroy_context()
 
-    def move_disc(self, a, b):
+    def __move(self, a, b):
         src_disc = None
         if len(self.discs[a]):
             src_disc = self.discs[a][-1]
@@ -81,19 +90,57 @@ class HanoiTowers:
         if len(self.discs[b]):
             dest_disc = self.discs[b][-1]
 
-        print(f'{src_disc} [{a}] -> {dest_disc} [{b}]')
+        print(f'{src_disc} [{a}] -> {dest_disc} [{b}]', end=' ')
         if dest_disc and src_disc and dest_disc.width < src_disc.width:
-            print(f'can not move: disc on tower {a} is > than disc on {b}')
+            print(f'WARN: can not move: disc on tower {a} is > than disc on {b}')
             return
+        print()
 
         self.discs[b].append(src_disc)
         self.discs[a].pop()
 
+    def move(self, a, b):
+        self.move_queue.append((a, b))
+
+
+class Solution:
+    def __init__(self, ht: HanoiTowers):
+        self.ht = ht
+
+    def __move(self, n, src, dst, tmp) -> None:    
+        '''
+        Move n top discs from src tower to dst, using tmp
+        as a buffer.
+        '''
+        if n == 0:
+            return
+
+        self.__move(n-1, src, tmp, dst)
+        self.ht.move(src, dst)
+        self.__move(n-1, tmp, dst, src)
+        
+
+    def solve(self) -> None:
+        self.__move(self.ht.n, 0, 2, 1)
+
+        #self.__move(3, 0, 2, 1)
+    
+        #self.__move(2, 0, 2, 1)
+
+
+        #self.__move(2, 0, 1, 2)
+            # self.__move(1, 0, 2, 1)
+            # self.__move(1, 0, 1, 2)
+            # self.__move(1, 2, 1, 0)
+
+        
+        #self.__move(1, 0, 2, 1)
+        #self.__move(2, 1, 2, 0)
+
     
 if __name__ == "__main__":
-    ht = HanoiTowers(n=int(sys.argv[1]))
+    n = int(sys.argv[1])
+    ht = HanoiTowers(n=n)
     htt = threading.Thread(target=ht.start)
     htt.start()
-    ht.move_disc(0, 1)
-    ht.move_disc(0, 2)
-    ht.move_disc(1, 2)
+    Solution(ht).solve()
