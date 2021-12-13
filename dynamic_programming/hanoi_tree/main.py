@@ -1,4 +1,5 @@
 import sys
+import threading
 import dearpygui.dearpygui as dpg
 
 WIDTH = 800
@@ -53,7 +54,8 @@ class HanoiTowers:
         for i in range(self.n):
             disc_w = self.max_disc_w-i*DISC_W 
             self.discs[0].append(Disc(disc_w)) 
-                                
+
+    def start(self):                        
         dpg.create_viewport(title='Hanoi Towers', width=WIDTH, height=HEIGHT)
         dpg.setup_dearpygui()
         dpg.show_viewport()
@@ -90,4 +92,8 @@ class HanoiTowers:
     
 if __name__ == "__main__":
     ht = HanoiTowers(n=int(sys.argv[1]))
- 
+    htt = threading.Thread(target=ht.start)
+    htt.start()
+    ht.move_disc(0, 1)
+    ht.move_disc(0, 2)
+    ht.move_disc(1, 2)
