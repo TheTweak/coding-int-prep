@@ -39,7 +39,7 @@ perm_([a b c], [], [])
 
 class PermutationsWithoutRepetitions:
     def __init__(self, string):
-        self.letters = list(string)
+        self.letters = set(string)
 
     def perm_(self, letters: list[str], result, permutations):
         if not len(letters):
@@ -49,7 +49,7 @@ class PermutationsWithoutRepetitions:
 
         for l in letters:
             result[0].append(l)
-            letters_copy = [x for x in letters]
+            letters_copy = letters.copy()
             letters_copy.remove(l)
             self.perm_(letters_copy, result, permutations)
             result[0].pop()
@@ -87,7 +87,7 @@ if __name__ == '__main__':
 
     print()
 
-    psr = PermutationsWithRepetitions('abcd').permutations()
+    psr = PermutationsWithRepetitions('abc').permutations()
     print(len(psr))
     for p in psr:
         print(p) 
