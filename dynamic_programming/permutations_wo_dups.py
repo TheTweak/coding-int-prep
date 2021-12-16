@@ -37,24 +37,57 @@ perm_([a b c], [], [])
 
 '''
 
-def perm_(letters: list[str], result, permutations):
-    if not len(letters):
-        permutation = ''.join(result[0])
-        permutations.append(permutation)        
-        return
+class PermutationsWithoutRepetitions:
+    def __init__(self, string):
+        self.letters = list(string)
 
-    for l in letters:
-        result[0].append(l)
-        letters_copy = [x for x in letters]
-        letters_copy.remove(l)
-        perm_(letters_copy, result, permutations)
-        result[0].pop()
-        
-    
-def permutations(s: str) -> list[str]:
-    result = []
-    perm_(list(s), [[]], result)
-    return result
+    def perm_(self, letters: list[str], result, permutations):
+        if not len(letters):
+            permutation = ''.join(result[0])
+            permutations.append(permutation)        
+            return
+
+        for l in letters:
+            result[0].append(l)
+            letters_copy = [x for x in letters]
+            letters_copy.remove(l)
+            self.perm_(letters_copy, result, permutations)
+            result[0].pop()
+                    
+    def permutations(self) -> list[str]:
+        result = []
+        self.perm_(self.letters, [[]], result)
+        return result
+
+class PermutationsWithRepetitions:
+    def __init__(self, string):
+        self.letters = list(string)
+
+    def perm_(self, result, permutations, size):
+        if not size:
+            permutation = ''.join(result[0])
+            permutations.append(permutation)        
+            return
+
+        for l in self.letters:
+            result[0].append(l)
+            self.perm_(result, permutations, size - 1)
+            result[0].pop()
+                    
+    def permutations(self) -> list[str]:
+        result = []
+        self.perm_([[]], result, len(self.letters))
+        return result
+            
 
 if __name__ == '__main__':
-    print(permutations('abcd'))
+    ps = PermutationsWithoutRepetitions('abc').permutations()
+    for p in ps:
+        print(p) 
+
+    print()
+
+    psr = PermutationsWithRepetitions('abcd').permutations()
+    print(len(psr))
+    for p in psr:
+        print(p) 
