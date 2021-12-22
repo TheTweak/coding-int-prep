@@ -40,24 +40,34 @@ class BruteForceSolution:
         self.coins = [25, 10, 5, 1]
         self.visited = set()
 
-    def __calc_ways__(self, summ: int, coin_set: list[int]) -> None:
-        if summ == self.n:
-            coin_set = sorted(coin_set)
-            cs_key = ''.join([str(c) for c in coin_set])
-            if not cs_key in self.visited:
-                print(coin_set)
-            self.visited.add(cs_key)
-            return
+    def __create_cs_key__(self, coin_set: list[int], summ: int) -> str:
+        coin_set = sorted(coin_set)
+        cs_key = ''.join([str(c) for c in coin_set]) + '_' + str(summ)
+        return cs_key
 
+    def __calc_ways__(self, summ: int, coin_set: list[int]) -> int:
+        cs_key = self.__create_cs_key__(coin_set, summ)
+
+        if cs_key in self.visited:
+            return 0
+
+        self.visited.add(cs_key)
+
+        if summ == self.n:
+            #print(coin_set)
+            return 1
+
+        result = 0
         for c in self.coins:
             if summ + c <= self.n:
                 coin_set.append(c)
-                self.__calc_ways__(summ + c, coin_set)
+                result += self.__calc_ways__(summ + c, coin_set)
                 coin_set.pop()
 
+        return result
+
     def solve(self):
-        self.__calc_ways__(0, [])
-        return len(self.visited)
+        return self.__calc_ways__(0, [])
 
 
 class DPSolution:
@@ -77,10 +87,10 @@ class DPSolution:
 
 
 if __name__ == '__main__':
-    print(BruteForceSolution(16).solve())
+    print(BruteForceSolution(200).solve())
     assert BruteForceSolution(1).solve() == 1
 
-    print(DPSolution(6).solve())
+    print(DPSolution(200).solve())
 
 
 
