@@ -32,6 +32,7 @@ wo repetitions:
 
 
 '''
+import sys
 
 
 class BruteForceSolution:
@@ -73,24 +74,25 @@ class BruteForceSolution:
 class DPSolution:
     def __init__(self, n):
         self.n = n
-        self.dp = [0 for _ in range(n+1)]
-        self.dp[0] = 1
-        self.coins = [25, 10, 5, 1]
+        self.coins = [1, 2, 5]
+        self.dp = [[0 for _ in range(len(self.coins))] for _ in range(n+1)]
+        self.dp[0][0] = 1
 
     def solve(self):
         for i in range(1, self.n + 1):
-            for c in self.coins:
-                if i - c >= 0:
-                    self.dp[i] += self.dp[i-c]
+            for j in range(len(self.coins)):
+                c = self.coins[j]
+                if i-c >= 0:
+                    #print(f'dp[{i}][{j}]=sum(dp[{i-c}][:{j+1}])')
+                    self.dp[i][j] = sum(self.dp[i-c][:j+1])
 
-        return self.dp[self.n]
+        #for r in self.dp:
+        #    print(r)
+        return sum(self.dp[self.n])
 
 
 if __name__ == '__main__':
-    print(BruteForceSolution(200).solve())
-    assert BruteForceSolution(1).solve() == 1
-
-    print(DPSolution(200).solve())
+    print(DPSolution(int(sys.argv[1])).solve())
 
 
 
