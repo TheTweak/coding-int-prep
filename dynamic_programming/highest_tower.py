@@ -67,6 +67,40 @@ def highest_tower(boxes: list[Box]) -> int:
     return dp[-1]
 
 
+def calc_height(boxes: list[Box], bottom_index: int, height_map: list[int]) -> int:
+    if bottom_index < len(height_map) and  height_map[bottom_index] > 0:
+        return height_map[bottom_index]
+
+    bottom_box = boxes[bottom_index]
+    max_height = 0
+    for i in range(bottom_index + 1, len(boxes)):
+        box = boxes[i]
+        if bottom_box.h > box.h and \
+           bottom_box.w > box.w and \
+           bottom_box.d > box.d:
+            height = calc_height(boxes, i, height_map)
+            max_height = max(max_height, height)
+
+    max_height += bottom_box.h
+    height_map[bottom_index] = max_height
+    return max_height
+
+
+def highest_tower_2(boxes: list[Box]) -> int:
+    # sort boxes in descending order of height
+    boxes = sorted(boxes, key=lambda b: b.h, reverse=True)
+    max_h = 0
+    height_map = [0 for _ in range(len(boxes))]
+    
+    for i in range(len(boxes)):
+        # calc height of stack of boxes with i at the bottom
+        h = calc_height(boxes, i, height_map)
+        max_h = max(max_h, h)
+    
+    return max_h
+
+
 if __name__ == '__main__':
     boxes = [Box(1, 1, 3), Box(1, 1, 0.5), Box(3, 3, 2), Box(2, 2, 1), Box(5, 5, 1), Box(6, 6, 1.5), Box(7, 7, 2)]
     print(highest_tower(boxes))
+    print(highest_tower_2(boxes))
