@@ -26,9 +26,13 @@ countEval("(1)^(0|0|1)", f) = countEval(left=1, f) * countEval(right=0|0|1, f)
 
 '''
 
-def count_eval(expr: str, expected: bool) -> int:
+def count_eval(expr: str, expected: bool, cache: dict[str:bool]) -> int:
     if not len(expr):
         return 0
+
+    cache_key = expr+str(expected)
+    if cache_key in cache:
+        return cache[cache_key]
 
     if len(expr) == 1:
         if (expected and expr == '1') or (not expected and expr == '0'):
@@ -40,10 +44,10 @@ def count_eval(expr: str, expected: bool) -> int:
         left_expr = expr[:i]
         right_expr = expr[i+1:]
 
-        left_true = count_eval(left_expr, True)
-        left_false = count_eval(left_expr, False)
-        right_true = count_eval(right_expr, True)
-        right_false = count_eval(right_expr, False)
+        left_true = count_eval(left_expr, True, cache)
+        left_false = count_eval(left_expr, False, cache)
+        right_true = count_eval(right_expr, True, cache)
+        right_false = count_eval(right_expr, False, cache)
 
         op = expr[i]
         if op == '^':
@@ -64,10 +68,12 @@ def count_eval(expr: str, expected: bool) -> int:
                 result += left_false*right_true + left_true*right_false + \
                     left_false*right_false
 
+    cache[cache_key] = result
+
     return result
 
 
 if __name__ == '__main__':
-    solution = count_eval('1^0|0|1', False)
+    solution = count_eval('1^0|0|1', False, {})
     assert solution == 2
-    assert count_eval('0&0&0&1^1|0', True) == 10
+    assert count_eval('0&0&0&1^1|0', True, {}) == 10
