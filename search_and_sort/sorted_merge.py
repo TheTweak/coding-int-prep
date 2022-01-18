@@ -11,29 +11,9 @@ def shift_right(x: list[int], start: int) -> None:
         prev = tmp
 
 
-def sorted_merge(a: list[int], b: list[int]) -> None:
+def sorted_merge_shift(a: list[int], b: list[int]) -> None:
     '''
-        a = [1, 2, 3, 4, 5, None, None, None, None, None, None]
-        b = [0, 2, 3, 6, 8, 10]
-
-        i = 0, j = 0
-        a = [0, 1, 2, 3, 4, 5, None, None, None, None, None]
-
-        i = 1, j = 1
-        a = [0, 1, 2, 3, 4, 5, None, None, None, None, None]
-
-        i = 3, j = 1
-        a = [0, 1, 2, 2, 3, 4, 5, None, None, None, None]
-
-        i = 5, j = 2
-        a = [0, 1, 2, 2, 3, 3, 4, 5, None, None, None]
-        
-        i = 6, j = 3
-        a = [0, 1, 2, 2, 3, 3, 4, 5, None, None, None]
-
-        i = 10
-        a[8:] = b[3:]
-        
+    time complexity O(n*m)
     '''
     i = 0
     j = 0
@@ -47,19 +27,41 @@ def sorted_merge(a: list[int], b: list[int]) -> None:
     if j != len(b):
         a[i-(len(b)-j):] = b[j:]
 
+
+def sorted_merge_backwards(a: list[int], b: list[int]) -> None:
+    '''
+    time complexity O(n+m)
+    '''
+    i = -1
+    for x in a:
+        if x is None:
+            break
+        i += 1
+    j = len(b) - 1
+    k = len(a) - 1
+
+    while j >= 0:
+        if i >= 0 and a[i] >= b[j]:
+            a[k] = a[i]
+            i -= 1
+        else:
+            a[k] = b[j]
+            j -=1
+        k -= 1
+
         
 if __name__ == '__main__':
     a = [1, 2, 3, 4, 5, None, None, None, None, None, None]
     b = [0, 2, 3, 6, 8, 10]
-    sorted_merge(a, b)
+    sorted_merge_backwards(a, b)
     assert a == [0, 1, 2, 2, 3, 3, 4, 5, 6, 8, 10]
 
     a = [1, 2, 3, 4, 5, None, None, None, None, None, None]
     b = [10, 11, 12, 13, 14, 15]
-    sorted_merge(a, b)
+    sorted_merge_backwards(a, b)
     assert a == [1, 2, 3, 4, 5, 10, 11, 12, 13, 14, 15]
 
     a = [1, 2, 3, 4, 5, None, None, None, None, None, None]
     b = [-10, -9, -8, -7, -6, -5]
-    sorted_merge(a, b)
+    sorted_merge_backwards(a, b)
     assert a == [-10, -9, -8, -7, -6, -5, 1, 2, 3, 4, 5]
