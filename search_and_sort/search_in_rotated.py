@@ -12,12 +12,14 @@ import sys
 
 
 def find_offset(a: list[int]) -> int:
-    min_el = sys.maxint
+    min_el = sys.maxsize
     min_i = 0
-    for i, x in enumerate(a):
+    i = 0
+    for x in a:
         if x < min_el:
             min_i = i
             min_el = x
+        i += 1
 
     return min_i
 
@@ -30,11 +32,11 @@ def bin_search(a: list[int], el: int, l: int, h: int, offset: int) -> int:
     if l > h:
         return -1
 
-    mid = (l + h) / 2
+    mid = (l + h) // 2
     mid_ = get_orig_idx(mid, offset, len(a))
     if a[mid_] == el:
         return mid_
-    elif a[mid] > el:
+    elif a[mid_] > el:
         return bin_search(a, el, l, mid - 1, offset)
     else:
         return bin_search(a, el, mid + 1, h, offset)
@@ -42,7 +44,7 @@ def bin_search(a: list[int], el: int, l: int, h: int, offset: int) -> int:
 
 def search_rotated(a: list[int], el: int) -> int:
     offset = find_offset(a)
-    return bin_search(a, el, 0, len(a) - 1, offset)
+    return bin_search(a, el, 0, len(a), offset)
     
 
 if __name__ == '__main__':
@@ -50,3 +52,12 @@ if __name__ == '__main__':
     result = search_rotated(a, 5)
     print(f'result: {result}')
     assert result == 8
+
+    result = search_rotated(a, 100)
+    print(f'result: {result}')
+    assert result == -1
+
+    result = search_rotated(a, 1)
+    print(f'result: {result}')
+    assert result == 5
+
